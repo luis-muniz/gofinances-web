@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useHistory, RouteProps } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 import filesize from 'filesize';
 
@@ -26,13 +26,12 @@ const Import: React.FC = () => {
     const data = new FormData();
 
     data.append('file', uploadedFiles[0].file, uploadedFiles[0].name);
-    // TODO
 
     try {
       await api.post('/transactions/import', data);
       history.push('/');
     } catch (err) {
-      console.log(err.response.error);
+      throw Error(err.response.error);
     }
   }
 
