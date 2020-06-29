@@ -82,6 +82,36 @@ export const TableContainer = styled.section`
       &.outcome {
         color: #e83f5b;
       }
+
+      &.data {
+        padding-right: 10px;
+      }
+
+      &.button {
+        width: 120px;
+        padding: 20px 0px;
+        button {
+          background: #ff6347;
+          display: flex;
+          padding: 0px 10px;
+          justify-content: space-between;
+          align-items: center;
+          width: 80px;
+          height: 40px;
+          border-radius: 6px;
+          border-style: none;
+          color: #fff;
+          transition-duration: 0.4s;
+        }
+        button:hover {
+          opacity: 50%;
+        }
+        svg {
+        }
+        span {
+          font-size: 12px;
+        }
+      }
     }
 
     td:first-child {

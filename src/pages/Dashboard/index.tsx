@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { FaTrashAlt } from 'react-icons/fa';
 
 import income from '../../assets/income.svg';
 import outcome from '../../assets/outcome.svg';
@@ -65,6 +66,40 @@ const Dashboard: React.FC = () => {
     loadTransactions();
   }, []);
 
+  async function handleDeleteTransaction(id: string): Promise<void> {
+    const response = await api.delete(`/transactions/${id}`);
+
+    if (response.status !== 204) {
+      throw Error('erro ao deletar');
+    }
+
+    const newTransactions = transactions.filter(
+      transaction => transaction.id !== id,
+    );
+
+    const incomeUpdated = newTransactions.reduce(
+      (count, transaction) =>
+        transaction.type === 'income' ? transaction.value + count : count,
+      0,
+    );
+
+    const outcomeUpdated = newTransactions.reduce(
+      (count, transaction) =>
+        transaction.type === 'outcome' ? transaction.value + count : count,
+      0,
+    );
+
+    const totalUpdated = incomeUpdated - outcomeUpdated;
+
+    const newBalance: Balance = {
+      income: formatValue(incomeUpdated),
+      outcome: formatValue(outcomeUpdated),
+      total: formatValue(totalUpdated),
+    };
+    setBalance(newBalance);
+    setTransactions(newTransactions);
+  }
+
   return (
     <>
       <Header />
@@ -113,7 +148,16 @@ const Dashboard: React.FC = () => {
                       {transaction.formattedValue}
                     </td>
                     <td>{transaction.category.title}</td>
-                    <td>{transaction.formattedDate}</td>
+                    <td className="data">{transaction.formattedDate}</td>
+                    <td className="button">
+                      <button
+                        type="submit"
+                        onClick={() => handleDeleteTransaction(transaction.id)}
+                      >
+                        <span>Deletar</span>
+                        <FaTrashAlt size={12} />
+                      </button>
+                    </td>
                   </tr>
                 ))}
             </tbody>
